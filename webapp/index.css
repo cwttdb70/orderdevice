@@ -1,0 +1,45 @@
+#test {
+	text-align:center;
+
+}
+
+.select-input--underbar {
+	width:100% !important;
+}
+
+.list{
+	font-size: 13px !important;
+}
+
+.list__item__left {
+	font-size: 13px !important;
+}
+
+.text-input--underbar[name="noplz"] {
+	width: 80% !important;
+}
+
+.button{
+padding-top:0;
+padding-bottom:0;
+}
+
+.center {
+	text-align:center;
+}
+
+.left {
+	text-align:left;
+}
+
+.largeIcon {
+	font-size: 18px !important;
+}
+
+.moreLeft {
+	margin-left:-2px !important;
+}
+
+.smallIcon {
+	font-size: 10px !important;
+}

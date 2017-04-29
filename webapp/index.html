@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <link rel="stylesheet" href="lib/onsen/css/onsenui.css"/>
+      <link rel="stylesheet" href="lib/onsen/css/onsen-css-components.css"/>
+      <link rel="stylesheet" href="css/index.css"/>
+      <script src="lib/onsen/js/onsenui.js"></script>
+      <script type="text/javascript" src="cordova.js"></script>
+      <script type="text/javascript" src="js/index.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+      <script src="http://cdn.jsdelivr.net/sparkjs/1.0.0/spark.min.js"></script>
+      <title>Generic Bar + Grill</title>
+   </head>
+   <body>
+      <!-- TabBar -->
+      <ons-tabbar id="tabBar" name="tabName" animation="slide">
+         <ons-tab label="Menu" icon="ion-fork" page="menu.html" active>
+         </ons-tab>
+         <ons-tab label="Order Control" page="tab2.html" icon="ion-ios-settings-strong">
+         </ons-tab>
+         <ons-tab label="Times" page="tab3.html" icon="ion-ios-stopwatch">
+         </ons-tab>
+      </ons-tabbar>
+      <!-- Main page (menu) -->
+      <ons-template id="menu.html">
+         <ons-page>
+            <ons-toolbar>
+               <div class="center">Generic Bar + Grill</div>
+            </ons-toolbar>
+            <!-- Menu List -->
+            <ons-list>
+               <ons-list-header>Menu</ons-list-header>
+               <ons-list-item modifier="longdivider">
+                  <div class="left">
+                     <ons-icon icon="ion-soup-can" class="list-item__icon"></ons-icon>
+                     &nbsp; Soup
+                  </div>
+                  <div class="center">
+                     <span id="item1price" value="9">$9.00</span>
+                  </div>
+                  <div class="right">
+                     <ons-input type="number" id="item1q" modifier="underbar" placeholder="soup quantity"></ons-input>
+                  </div>
+               </ons-list-item>
+               <ons-list-item modifier="longdivider">
+                  <div class="left">
+                     <ons-icon icon="ion-pizza" class="list-item__icon"></ons-icon>
+                     &nbsp; Pizza
+                  </div>
+                  <div class="center">
+                     <span id="item2price" value="12">$12.00</span>
+                  </div>
+                  <div class="right">
+                     <ons-input type="number" id="item2q" modifier="underbar" placeholder="pizza quantity"></ons-input>
+                  </div>
+               </ons-list-item>
+               <ons-list-item modifier="longdivider">
+                  <div class="left">
+                     <img class="list-item__thumbnail" src="http://i.imgur.com/rQvdCDw.png">
+                     &nbsp; Hamburger
+                  </div>
+                  <div class="center">
+                     <span id="item3price" value="15">$15.00</span>
+                  </div>
+                  <div class="right">
+                     <ons-input type="number" id="item3q" modifier="underbar" placeholder="hamburger quantity"></ons-input>
+                  </div>
+               </ons-list-item>
+               <ons-list-item modifier="longdivider">
+                  <div class="left">
+                     <img class="list-item__thumbnail" src="http://img.pixady.com/2017/04/717080_frenchfries_1.png">
+                     &nbsp; French Fries
+                  </div>
+                  <div class="center">
+                     <span id="item4price" value="6">$6.00</span>
+                  </div>
+                  <div class="right">
+                     <ons-input type="number" id="item4q" modifier="underbar" placeholder="french fries quantity"></ons-input>
+                  </div>
+               </ons-list-item>
+               <ons-list-item modifier="longdivider">
+                  <div class="left">
+                     <ons-icon icon="md-drink" class="list-item__icon"></ons-icon>
+                     &nbsp; Soda
+                  </div>
+                  <div class="center">
+                     <span id="item5price" value="3">$3.00</span>
+                  </div>
+                  <div class="right">
+                     <ons-input type="number" id="item5q" modifier="underbar" placeholder="soda quantity"></ons-input>
+                  </div>
+               </ons-list-item>
+            </ons-list>
+            <!-- end menu list -->
+            <!-- review order list -->
+            <ons-list>
+               <ons-list-header>Review Order</ons-list-header>
+               <ons-list-item modifier="longdivider">
+                  <div class="left">
+                     Food
+                  </div>
+                  <div class="right">
+                     <output id="foodTotal"></output>
+                  </div>
+               </ons-list-item>
+            </ons-list>
+            <ons-list-item modifier="longdivider">
+               <div class="left">
+                  Tax
+               </div>
+               <div class="right">
+                  <output id="taxTotal"></output>
+               </div>
+            </ons-list-item>
+            </ons-list>
+            <ons-list-item modifier="longdivider">
+               <div class="left">
+                  Total
+               </div>
+               <div class="right">
+                  <output id="totalTotal"></output>
+               </div>
+            </ons-list-item>
+            </ons-list>
+            <ons-list-item modifier="longdivider">
+               <div class="left">
+                  Submit Order
+               </div>
+               <div class="right">
+                  <ons-button id="submitOrderButton">Submit</ons-button>
+               </div>
+            </ons-list-item>
+            </ons-list>
+            <!-- end review order list -->
+         </ons-page>
+      </ons-template>
+      <!-- order control page -->
+      <ons-template id="tab2.html">
+         <ons-page>
+            <ons-toolbar>
+               <div class="center">Order Control</div>
+            </ons-toolbar>
+            <div class="center" style="text-align:center;" id="noOrders">There are no current orders in the system</div>
+            <!-- the active order(s) go here, hidden to start -->
+            <ons-list id="order123">
+               <ons-list-header>Order #123 (<span id="orderTimeSpan"></span>) (<span id="orderTotalSpan"></span>)</ons-list-header>
+               <ons-list-item modifier="longdivider" class="item1listitem">
+                  <div class="left">
+                     <ons-icon icon="ion-soup-can" class="list-item__icon"></ons-icon>
+                     &nbsp; Soup
+                  </div>
+                  <div class="center">
+                     Qty:&nbsp; <span class="q1qty">3</span>
+                  </div>
+                  <div class="right">
+                     <label class="radio-button radio-button--material">
+                        <input type="radio" class="radio-button__input radio-button--material__input" name="soupRadio" value="0">
+                        <div class="radio-button__checkmark radio-button--material__checkmark"></div>
+                        Queue&nbsp;
+                     </label>
+                     <label class="radio-button radio-button--material">
+                        <input type="radio" class="radio-button__input radio-button--material__input" name="soupRadio" value="1">
+                        <div class="radio-button__checkmark radio-button--material__checkmark"></div>
+                        Preparing&nbsp;
+                     </label>
+                     <label class="radio-button radio-button--material">
+                        <input type="radio" class="radio-button__input radio-button--material__input" name="soupRadio" value="2">
+                        <div class="radio-button__checkmark radio-button--material__checkmark"></div>
+                        Done
+                     </label>
+                  </div>
+               </ons-list-item>
+               <ons-list-item modifier="longdivider">
+                  <div class="left">
+                     <ons-icon icon="ion-pizza" class="list-item__icon"></ons-icon>
+                     &nbsp; Pizza
+                  </div>
+                  <div class="center">
+                     Qty:&nbsp; <span class="q2qty">3</span>
+                  </div>
+                  <div class="right">
+                     <label class="radio-button radio-button--material">
+                        <input type="radio" class="radio-button__input radio-button--material__input" name="pizzaRadio" value="0">
+                        <div class="radio-button__checkmark radio-button--material__checkmark"></div>
+                        Queue&nbsp;
+                     </label>
+                     <label class="radio-button radio-button--material">
+                        <input type="radio" class="radio-button__input radio-button--material__input" name="pizzaRadio" value="1">
+                        <div class="radio-button__checkmark radio-button--material__checkmark"></div>
+                        Preparing&nbsp;
+                     </label>
+                     <label class="radio-button radio-button--material">
+                        <input type="radio" class="radio-button__input radio-button--material__input" name="pizzaRadio" value="2">
+                        <div class="radio-button__checkmark radio-button--material__checkmark"></div>
+                        Done
+                     </label>
+                  </div>
+               </ons-list-item>
+               <ons-list-item modifier="longdivider">
+                  <div class="left">
+                     <img class="list-item__thumbnail" src="http://i.imgur.com/rQvdCDw.png">
+                     &nbsp; Burger
+                  </div>
+                  <div class="center">
+                     Qty:&nbsp; <span class="q3qty">3</span>
+                  </div>
+                  <div class="right">
+                     <label class="radio-button radio-button--material">
+                        <input type="radio" class="radio-button__input radio-button--material__input" name="burgerRadio" value="0">
+                        <div class="radio-button__checkmark radio-button--material__checkmark"></div>
+                        Queue&nbsp;
+                     </label>
+                     <label class="radio-button radio-button--material">
+                        <input type="radio" class="radio-button__input radio-button--material__input" name="burgerRadio" value="1">
+                        <div class="radio-button__checkmark radio-button--material__checkmark"></div>
+                        Preparing&nbsp;
+                     </label>
+                     <label class="radio-button radio-button--material">
+                        <input type="radio" class="radio-button__input radio-button--material__input" name="burgerRadio" value="2">
+                        <div class="radio-button__checkmark radio-button--material__checkmark"></div>
+                        Done
+                     </label>
+                  </div>
+               </ons-list-item>
+               <ons-list-item modifier="longdivider">
+                  <div class="left">
+                     <img class="list-item__thumbnail" src="http://img.pixady.com/2017/04/717080_frenchfries_1.png">
+                     &nbsp; Fries
+                  </div>
+                  <div class="center">
+                     Qty:&nbsp; <span class="q4qty">3</span>
+                  </div>
+                  <div class="right">
+                     <label class="radio-button radio-button--material">
+                        <input type="radio" class="radio-button__input radio-button--material__input" name="fryRadio" value="0">
+                        <div class="radio-button__checkmark radio-button--material__checkmark"></div>
+                        Queue&nbsp;
+                     </label>
+                     <label class="radio-button radio-button--material">
+                        <input type="radio" class="radio-button__input radio-button--material__input" name="fryRadio" value="1">
+                        <div class="radio-button__checkmark radio-button--material__checkmark"></div>
+                        Preparing&nbsp;
+                     </label>
+                     <label class="radio-button radio-button--material">
+                        <input type="radio" class="radio-button__input radio-button--material__input" name="fryRadio" value="2">
+                        <div class="radio-button__checkmark radio-button--material__checkmark"></div>
+                        Done
+                     </label>
+                  </div>
+               </ons-list-item>
+               <ons-list-item modifier="longdivider">
+                  <div class="left">
+                     <ons-icon icon="md-drink" class="list-item__icon"></ons-icon>
+                     &nbsp; Soda
+                  </div>
+                  <div class="center">
+                     Qty:&nbsp; <span class="q5qty">3</span>
+                  </div>
+                  <div class="right">
+                     <label class="radio-button radio-button--material">
+                        <input type="radio" class="radio-button__input radio-button--material__input" name="sodaRadio" value="0">
+                        <div class="radio-button__checkmark radio-button--material__checkmark"></div>
+                        Queue&nbsp;
+                     </label>
+                     <label class="radio-button radio-button--material">
+                        <input type="radio" class="radio-button__input radio-button--material__input" name="sodaRadio" value="1">
+                        <div class="radio-button__checkmark radio-button--material__checkmark"></div>
+                        Preparing&nbsp;
+                     </label>
+                     <label class="radio-button radio-button--material">
+                        <input type="radio" class="radio-button__input radio-button--material__input" name="sodaRadio" value="2">
+                        <div class="radio-button__checkmark radio-button--material__checkmark"></div>
+                        Done
+                     </label>
+                  </div>
+               </ons-list-item>
+               <ons-list-item modifier="longdivider">
+                  <div class="left">
+                     <ons-icon icon="fa-check" class="list-item__icon"></ons-icon>
+                     &nbsp; Complete Order
+                  </div>
+                  <div class="right">
+                     <ons-button id="completeOrderButton">Complete</ons-button>
+                  </div>
+               </ons-list-item>
+            </ons-list>
+            <!-- Reset orders list -->
+            <ons-list>
+               <ons-list-header>Reset All Orders</ons-list-header>
+               <ons-list-item modifier="longdivider">
+                  <div class="left">
+                     <ons-icon icon="fa-ban" class="list-item__icon"></ons-icon>
+                     &nbsp; Reset Orders
+                  </div>
+                  <div class="right">
+                     <ons-button id="resetOrderButton">Reset</ons-button>
+                  </div>
+               </ons-list-item>
+         </ons-page>
+      </ons-template>
+      <!-- Times page -->
+      <ons-template id="tab3.html">
+      <ons-page>
+      <ons-toolbar>
+      <div class="center">Times</div>
+      </ons-toolbar>
+      <ons-list id="currentETAS">
+      <ons-list-header>Current ETAs</ons-list-header>
+      <ons-list-item>    
+      <ons-row>
+      <ons-col></ons-col>
+      <ons-col class="center">Queue</ons-col>
+      <ons-col class="center">Preparation</ons-col>
+      </ons-row>
+      <ons-row>
+      <ons-col class="left"><ons-icon icon="ion-soup-can" class="list-item__icon largeIcon"></ons-icon>
+      &nbsp; Soup</ons-col>
+      <ons-col class="center" id="soupQ"> <ons-icon icon="fa-arrow-up" class="list-item__icon smallIcon" id="soupQUp"></ons-icon>
+      <span id="item1QT"></span>
+      <ons-icon icon="fa-arrow-down" class="list-item__icon smallIcon" id="soupQDown"></ons-icon>
+      </ons-col>
+      <ons-col class="center" id="soupP"> <ons-icon icon="fa-arrow-up" class="list-item__icon smallIcon" id="soupPUp"></ons-icon>
+      <span id="item1PT"></span>
+      <ons-icon icon="fa-arrow-down" class="list-item__icon smallIcon" id="soupPDown"></ons-icon>
+      </ons-col>
+      </ons-row>
+      <ons-row>
+      <ons-col class="left"> <ons-icon icon="ion-pizza" class="list-item__icon largeIcon"></ons-icon>
+      &nbsp; Pizza</ons-col>
+      <ons-col class="center" id="pizzaQ">
+      <ons-icon icon="fa-arrow-up" class="list-item__icon smallIcon" id="pizzaQUp"></ons-icon>
+      <span id="item2QT"></span>
+      <ons-icon icon="fa-arrow-down" class="list-item__icon smallIcon" id="pizzaQDown"></ons-icon>
+      </ons-col>
+      <ons-col class="center" id="pizzaP"> <ons-icon icon="fa-arrow-up" class="list-item__icon smallIcon" id="pizzaPUp"></ons-icon>
+      <span id="item2PT"></span>
+      <ons-icon icon="fa-arrow-down" class="list-item__icon smallIcon" id="pizzaPDown"></ons-icon>
+      </ons-col>
+      </ons-row>
+      <ons-row>
+      <ons-col class="left"> <img class="list-item__thumbnail moreLeft" src="http://i.imgur.com/rQvdCDw.png">
+      &nbsp; Hamburger</ons-col>
+      <ons-col class="center" id="hamburgerQ"> <ons-icon icon="fa-arrow-up" class="list-item__icon smallIcon" id="hamburgerQUp"></ons-icon>
+      <span id="item3QT"></span>
+      <ons-icon icon="fa-arrow-down" class="list-item__icon smallIcon" id="hamburgerQDown"></ons-icon>
+      </ons-col>
+      <ons-col class="center" id="hamburgerP"> <ons-icon icon="fa-arrow-up" class="list-item__icon smallIcon" id="hamburgerPUp"></ons-icon>
+      <span id="item3PT"></span>
+      <ons-icon icon="fa-arrow-down" class="list-item__icon smallIcon" id="hamburgerPDown"></ons-icon>
+      </ons-col>
+      </ons-row>
+      <ons-row>
+      <ons-col class="left"><img class="list-item__thumbnail moreLeft" src="http://img.pixady.com/2017/04/717080_frenchfries_1.png">
+      &nbsp; French Fries</ons-col>
+      <ons-col class="center" id="friesQ"> <ons-icon icon="fa-arrow-up" class="list-item__icon smallIcon" id="friesQUp"></ons-icon>
+      <span id="item4QT"></span>
+      <ons-icon icon="fa-arrow-down" class="list-item__icon smallIcon" id="friesQDown"></ons-icon>
+      </ons-col>
+      <ons-col class="center" id="friesP"> <ons-icon icon="fa-arrow-up" class="list-item__icon smallIcon" id="friesPUp"></ons-icon>
+      <span id="item4PT"></span>
+      <ons-icon icon="fa-arrow-down" class="list-item__icon smallIcon" id="friesPDown"></ons-icon>
+      </ons-col>
+      </ons-row>
+      <ons-row>
+      <ons-col class="left"> <ons-icon icon="md-drink" class="list-item__icon largeIcon"></ons-icon>
+      &nbsp; Soda</ons-col>
+      <ons-col class="center" id="sodaQ"> <ons-icon icon="fa-arrow-up" class="list-item__icon smallIcon" id="sodaQUp"></ons-icon>
+      <span id="item5QT"></span>
+      <ons-icon icon="fa-arrow-down" class="list-item__icon smallIcon" id="sodaQDown"></ons-icon>
+      </ons-col>
+      <ons-col class="center" id="sodaP"> <ons-icon icon="fa-arrow-up" class="list-item__icon smallIcon" id="sodaPUp"></ons-icon>
+      <span id="item5PT"></span>
+      <ons-icon icon="fa-arrow-down" class="list-item__icon smallIcon" id="sodaPDown"></ons-icon>
+      </ons-col>
+      </ons-row>
+      </ons-list-item>
+      </ons-list>
+      </ons-list-item>
+      </ons-list>
+      </ons-page>
+      </ons-template>
+   </body>
+</html>
